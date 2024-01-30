@@ -96,6 +96,25 @@ def insert_into_stock_news_table(articles: List[Dict], ticker: str) -> None:
     conn.close()
 
 
+def update_stock_news_table(id: int, article: str) -> None:
+    """ """
+    conn = connect_with_database()
+    cur = conn.cursor()
+
+    values = (article, id)
+
+    cur.execute(
+        """ UPDATE public.stock_news
+            SET article = %s
+            WHERE id = %s""",
+        values,
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     """
     returns a dataframe of the stock_news table

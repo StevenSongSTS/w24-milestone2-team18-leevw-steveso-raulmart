@@ -1,8 +1,9 @@
 from typing import Dict, List
+import pandas as pd
 
 import psycopg2
 
-from lib.constants import DB_URL
+from constants import DB_URL
 
 
 def connect_with_database() -> psycopg2.extensions.connection:
@@ -57,7 +58,8 @@ def create_stock_news_table() -> None:
                     title TEXT,           
                     url TEXT,           
                     article TEXT,                             
-                    date DATE NOT NULL                 
+                    date DATE NOT NULL 
+                    UNIQUE(title, date)
                 );
                 """
     sql_execution_wrapper(sql_query)
@@ -92,3 +94,17 @@ def insert_into_stock_news_table(articles: List[Dict], ticker: str) -> None:
     conn.commit()
     cur.close()
     conn.close()
+
+
+def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"SELECT * FROM public.stock_news WHERE ticker='{ticker}'", DB_URL
+    )

@@ -2,8 +2,8 @@ import argparse
 
 from benzinga import news_data
 
-from lib.constants import BENZINGA_KEY
-from lib.db_helper_functions import (
+from constants import BENZINGA_KEY
+from db_helper_functions import (
     create_stock_news_table,
     drop_stock_news_table,
     insert_into_stock_news_table,

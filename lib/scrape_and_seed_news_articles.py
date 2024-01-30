@@ -2,6 +2,7 @@ import argparse
 
 from db_helper_functions import get_stock_news_from_db, update_stock_news_table
 from benziga_article_scraper import scrape_article
+import time
 
 
 def seed_news_articles(ticker):
@@ -20,8 +21,12 @@ def seed_news_articles(ticker):
 
         print(f"Scraping row {row[0]}/{len(df)}, DB id={id}")
 
-        article_text = scrape_article(url)
-        update_stock_news_table(id, article_text)
+        try:
+            article_text = scrape_article(url)
+            update_stock_news_table(id, article_text)
+            time.sleep(2)
+        except:
+            print(f"ISSUE ON: row {row[0]}/{len(df)}, DB id={id}, skipping entry")
 
 
 def main() -> None:

@@ -24,7 +24,7 @@ def seed_news_articles(ticker):
         try:
             article_text = scrape_article(url)
             update_stock_news_table(id, article_text)
-            time.sleep(2)
+            time.sleep(0.5)
         except:
             print(f"ISSUE ON: row {row[0]}/{len(df)}, DB id={id}, skipping entry")
 

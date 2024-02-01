@@ -47,21 +47,14 @@ def main() -> None:
         "-ticker",
         help="Ticker Symbol of company you would like to seed the database with",
     )
-    parser.add_argument("-reset_database_table", help="Do the bar option")
     parsed_args = parser.parse_args()
     ticker = parsed_args.ticker
-    reset_database_table = parsed_args.reset_database_table
 
     if not ticker:
         print(
             "Please include ticker symbol of the company you would like to seed as a commandline argument. Example: -ticker=MSFT"
         )
         return
-
-    if reset_database_table:
-        print("Resetting Database Tables...")
-        drop_stock_news_table()
-        create_stock_news_table()
 
     seed_news_article_links(ticker)
 

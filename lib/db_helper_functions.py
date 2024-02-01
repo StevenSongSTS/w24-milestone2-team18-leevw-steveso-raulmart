@@ -115,6 +115,24 @@ def update_stock_news_table(id: int, article: str) -> None:
     conn.close()
 
 
+def delete_from_stock_news_table(ticker: str) -> None:
+    """ """
+    conn = connect_with_database()
+    cur = conn.cursor()
+
+    values = (ticker,)
+
+    cur.execute(
+        """ DELETE FROM public.stock_news           
+            WHERE ticker = %s""",
+        values,
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     """
     returns a dataframe of the stock_news table

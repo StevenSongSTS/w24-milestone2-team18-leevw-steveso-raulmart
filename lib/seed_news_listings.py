@@ -4,8 +4,6 @@ from benzinga import news_data
 
 from constants import BENZINGA_KEY
 from db_helper_functions import (
-    create_stock_news_table,
-    drop_stock_news_table,
     insert_into_stock_news_table,
 )
 

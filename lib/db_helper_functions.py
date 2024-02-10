@@ -65,6 +65,69 @@ def create_stock_news_table() -> None:
     sql_execution_wrapper(sql_query)
 
 
+def create_finbert_sentiment_scores_table() -> None:
+    """
+    This function creates the finbert_sentiment_scores table in the database if it does not exist.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """
+                CREATE TABLE IF NOT EXISTS finbert_sentiment_scores(
+                    id SERIAL PRIMARY KEY,
+                    positive_sentiment FLOAT,
+                    neutral_sentiment FLOAT,
+                    negative_sentiment FLOAT,                    
+                    CONSTRAINT fk_stock_news
+                        FOREIGN KEY(fk_stock_news_id) 
+                            REFERENCES stock_news(id)
+                            ON DELETE CASCADE
+                );
+                """
+    sql_execution_wrapper(sql_query)
+
+
+def insert_into_finbert_sentiment_scores_table(scores: List[Dict]) -> None:
+    """ """
+    conn = connect_with_database()
+    cur = conn.cursor()
+
+    values = [
+        (
+            s["fk_stock_news_id"],
+            s["positive_sentiment"],
+            s["neutral_sentiment"],
+            s["negative_sentiment"],
+        )
+        for s in scores
+    ]
+
+    cur.executemany(
+        """INSERT INTO public.finbert_sentiment_scores(fk_stock_news_id, positive_sentiment, neutral_sentiment, negative_sentiment) 
+           VALUES (%s,%s,%s,%s)""",
+        values,
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def create_finbert_sentiment_scores_table() -> None:
+    """
+    This function deletes the stock_news table in the database if it exists.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """DROP TABLE IF EXISTS finbert_sentiment_scores;"""
+    sql_execution_wrapper(sql_query)
+
+
 def drop_stock_news_table() -> None:
     """
     This function deletes the stock_news table in the database if it exists.

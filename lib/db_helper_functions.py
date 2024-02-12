@@ -243,3 +243,22 @@ def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     return pd.read_sql_query(
         f"SELECT * FROM public.stock_news WHERE ticker='{ticker}'", DB_URL
     )
+
+
+def get_news_summaries_from_db(ticker: str) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock news summaries
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"""SELECT sn.id, sn.ticker, sn.date, sn.title, sns.summary 
+            FROM public.stock_news sn
+            JOIN public.stock_news_summaries sns ON sn.id = sns.fk_stock_news_id
+            WHERE sn.ticker='{ticker}'
+            """,
+        DB_URL,
+    )

@@ -138,6 +138,44 @@ def drop_finbert_summary_sentiment_scores_table() -> None:
     sql_execution_wrapper(sql_query)
 
 
+def create_finbert_tone_summary_sentiment_scores_table() -> None:
+    """
+    This function creates the finbert_tone_summary_sentiment_scores table in the database if it does not exist.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """
+                CREATE TABLE IF NOT EXISTS finbert_tone_summary_sentiment_scores(
+                    id SERIAL PRIMARY KEY,
+                    fk_stock_news_id INT UNIQUE,
+                    positive FLOAT,
+                    negative FLOAT,                    
+                    neutral FLOAT,
+                    CONSTRAINT fk_stock_news
+                        FOREIGN KEY(fk_stock_news_id) 
+                            REFERENCES stock_news(id)
+                            ON DELETE CASCADE
+                );
+                """
+    sql_execution_wrapper(sql_query)
+
+
+def drop_finbert_tone_summary_sentiment_scores_table() -> None:
+    """
+    This function deletes the finbert_tone_summary_sentiment_scores table in the database if it exists.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """DROP TABLE IF EXISTS finbert_tone_summary_sentiment_scores;"""
+    sql_execution_wrapper(sql_query)
+
+
 def drop_stock_news_table() -> None:
     """
     This function deletes the stock_news table in the database if it exists.
@@ -233,7 +271,7 @@ def get_news_summaries_from_db(ticker: str) -> pd.DataFrame:
         f"""SELECT sn.id, sn.ticker, sn.date, sn.title, sns.summary 
             FROM public.stock_news sn
             JOIN public.stock_news_summaries sns ON sn.id = sns.fk_stock_news_id
-            WHERE sn.ticker='{ticker}'
+            
             """,
         DB_URL,
     )

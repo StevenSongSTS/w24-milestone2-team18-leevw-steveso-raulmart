@@ -2,7 +2,6 @@ from typing import Dict, List
 import pandas as pd
 
 import psycopg2
-
 from constants import DB_URL
 
 
@@ -62,6 +61,42 @@ def create_stock_news_table() -> None:
                     UNIQUE(title, date)
                 );
                 """
+    sql_execution_wrapper(sql_query)
+
+
+def create_stock_news_summaries_table() -> None:
+    """
+    This function creates the stock_news_summaries table in the database if it does not exist.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """
+                CREATE TABLE IF NOT EXISTS stock_news_summaries(
+                    id SERIAL PRIMARY KEY,
+                    fk_stock_news_id INT UNIQUE,
+                    summary TEXT,                   
+                    CONSTRAINT fk_stock_news
+                        FOREIGN KEY(fk_stock_news_id) 
+                            REFERENCES stock_news(id)
+                            ON DELETE CASCADE
+                );
+                """
+    sql_execution_wrapper(sql_query)
+
+
+def drop_stock_news_summaries_table() -> None:
+    """
+    This function deletes the stock_news_summaries table in the database if it exists.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """DROP TABLE IF EXISTS stock_news_summaries;"""
     sql_execution_wrapper(sql_query)
 
 

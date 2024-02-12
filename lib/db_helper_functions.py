@@ -258,6 +258,42 @@ def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     )
 
 
+def get_stock_news_with_finbert_scores_from_db(ticker: str) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table with finbert scores on article summaries
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"""SELECT * 
+            FROM public.stock_news 
+            JOIN public.finbert_summary_sentiment_scores sns ON sn.id = sns.fk_stock_news_id
+            WHERE ticker='{ticker}'""",
+        DB_URL,
+    )
+
+
+def get_stock_news_with_finbert_tone_scores_from_db(ticker: str) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table with finbert-tone scores on article summaries
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"""SELECT * 
+            FROM public.stock_news 
+            JOIN public.finbert_tone_summary_sentiment_scores sns ON sn.id = sns.fk_stock_news_id
+            WHERE ticker='{ticker}'""",
+        DB_URL,
+    )
+
+
 def get_news_summaries_from_db(ticker: str) -> pd.DataFrame:
     """
     returns a dataframe of the stock news summaries
@@ -271,7 +307,7 @@ def get_news_summaries_from_db(ticker: str) -> pd.DataFrame:
         f"""SELECT sn.id, sn.ticker, sn.date, sn.title, sns.summary 
             FROM public.stock_news sn
             JOIN public.stock_news_summaries sns ON sn.id = sns.fk_stock_news_id
-            
+            WHERE ticker='{ticker}'
             """,
         DB_URL,
     )

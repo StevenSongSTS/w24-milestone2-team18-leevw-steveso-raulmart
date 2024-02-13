@@ -1,11 +1,11 @@
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-import re
 
 nltk.download("punkt")
 nltk.download("stopwords")
 nltk.download("wordnet")
+import re
 
 
 def clean_text(text):

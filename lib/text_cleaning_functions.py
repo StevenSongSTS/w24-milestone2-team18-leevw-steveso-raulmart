@@ -8,18 +8,18 @@ nltk.download("wordnet")
 
 
 def clean_text(text):
-    tokens = nltk.word_tokenize(text.lower())  # lowercase text
-    stop_words = stopwords.words("english")  # remove stopwords
-    stop_words.extend([])  # TO DO: find a list of financial specific stopwords online
+    tokens = nltk.word_tokenize(text)   # tokenize but do not lowercase
+    stop_words = stopwords.words('english') # remove stopwords
+    stop_words.extend([])   # Do not remove financial specific stopwords. They are crucial to the context
 
-    # tokenize and remove special characters like punctuation
+    # remove stopwords and special characters
     tokens = [token for token in tokens if token not in stop_words]
-    tokens = [token for token in tokens if token.isalnum()]
+    tokens = [re.sub(r"[^\wA-Z']", "", token) for token in tokens]
 
     # apply lemmatization
     lemmatizer = WordNetLemmatizer()
     tokens = [lemmatizer.lemmatize(token) for token in tokens]
 
-    cleaned_text = " ".join(tokens)
+    cleaned_text = ' '.join(tokens)
 
     return cleaned_text

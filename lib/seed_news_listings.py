@@ -2,7 +2,7 @@ import argparse
 
 from benzinga import news_data
 
-from constants import BENZINGA_KEY
+from constants import BENZINGA_KEY, DATA_END_DATE, DATA_START_DATE
 from db_helper_functions import (
     insert_into_stock_news_table,
 )
@@ -14,8 +14,8 @@ def news_api_call(page, ticker):
     return news.news(
         pagesize=100,
         page=page,
-        date_from="2019-01-04",
-        date_to="2023-01-04",
+        date_from=DATA_START_DATE,
+        date_to=DATA_END_DATE,
         company_tickers=ticker,
     )
 

@@ -349,6 +349,26 @@ def get_stock_news_with_finbert_tone_scores_from_db(ticker: str) -> pd.DataFrame
     )
 
 
+def get_stock_news_with_finbert_whole_article_scores_from_db(
+    ticker: str,
+) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table with finbert-tone scores on article summaries
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"""SELECT sn.*, fwass.positive, fwass.negative, fwass.neutral
+            FROM public.stock_news sn            
+            JOIN public.finbert_whole_article_sentiment_scores fwass ON sn.id = fwass.fk_stock_news_id
+            WHERE ticker='{ticker}'""",
+        DB_URL,
+    )
+
+
 def get_news_summaries_from_db(ticker: str) -> pd.DataFrame:
     """
     returns a dataframe of the stock news summaries

@@ -306,7 +306,9 @@ def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: returns a dataframe of the stock_news table
     """
-    return pd.read_sql_query(f"SELECT * FROM public.stock_news", DB_URL)
+    return pd.read_sql_query(
+        f"SELECT * FROM public.stock_news WHERE ticker='{ticker}'", DB_URL
+    )
 
 
 def get_stock_news_with_finbert_scores_from_db(ticker: str) -> pd.DataFrame:

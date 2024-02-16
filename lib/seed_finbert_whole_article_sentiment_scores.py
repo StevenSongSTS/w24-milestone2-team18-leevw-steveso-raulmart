@@ -1,15 +1,13 @@
 import argparse
+import gc
 
 import numpy as np
 import torch
 from constants import DB_URL
 from db_helper_functions import (
-    create_finbert_whole_article_sentiment_scores_table,
-    drop_finbert_whole_article_sentiment_scores_table,
     get_finbert_whole_article_news_ids,
     get_stock_news_from_db,
 )
-import gc
 from nltk.tokenize import sent_tokenize
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 

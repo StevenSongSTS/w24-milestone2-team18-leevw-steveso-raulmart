@@ -1,13 +1,10 @@
 import pandas as pd
 import yfinance
-from db_helper_functions import get_stock_news_with_finbert_whole_article_scores_from_db
 from constants import DATA_END_DATE, DATA_START_DATE
 
 
-def gen_df_for_supervised_learning(ticker: str):
-    sentiment_articles_df = get_stock_news_with_finbert_whole_article_scores_from_db(
-        ticker
-    )
+def gen_df_for_supervised_learning(ticker: str, sentiment_df_retrieval_function):
+    sentiment_articles_df = sentiment_df_retrieval_function(ticker)
     grouped_sentiments = (
         sentiment_articles_df.groupby("date", as_index=False)
         .agg({"positive": "mean", "negative": "mean", "neutral": "mean"})

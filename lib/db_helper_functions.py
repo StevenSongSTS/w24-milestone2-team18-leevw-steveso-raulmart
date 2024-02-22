@@ -153,6 +153,21 @@ def get_finbert_whole_article_news_ids() -> pd.DataFrame:
     )
 
 
+def get_finbert_tone_whole_article_news_ids() -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"SELECT fk_stock_news_id FROM public.finbert_tone_whole_article_sentiment_scores",
+        DB_URL,
+    )
+
+
 def create_finbert_whole_article_sentiment_scores_table() -> None:
     """
     This function creates the finbert_whole_article_sentiment_scores table in the database if it does not exist.
@@ -188,6 +203,44 @@ def drop_finbert_whole_article_sentiment_scores_table() -> None:
         None
     """
     sql_query = """DROP TABLE IF EXISTS finbert_whole_article_sentiment_scores;"""
+    sql_execution_wrapper(sql_query)
+
+
+def create_finbert_tone_whole_article_sentiment_scores_table() -> None:
+    """
+    This function creates the finbert_tone_whole_article_sentiment_scores table in the database if it does not exist.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """
+                CREATE TABLE IF NOT EXISTS finbert_tone_whole_article_sentiment_scores(
+                    id SERIAL PRIMARY KEY,
+                    fk_stock_news_id INT UNIQUE,
+                    positive FLOAT,
+                    negative FLOAT,                    
+                    neutral FLOAT,
+                    CONSTRAINT fk_stock_news
+                        FOREIGN KEY(fk_stock_news_id) 
+                            REFERENCES stock_news(id)
+                            ON DELETE CASCADE
+                );
+                """
+    sql_execution_wrapper(sql_query)
+
+
+def drop_finbert_tone_whole_article_sentiment_scores_table() -> None:
+    """
+    This function deletes the finbert_tone_whole_article_sentiment_scores table in the database if it exists.
+
+    Parameters:
+        None
+    Returns:
+        None
+    """
+    sql_query = """DROP TABLE IF EXISTS finbert_tone_whole_article_sentiment_scores;"""
     sql_execution_wrapper(sql_query)
 
 
@@ -306,9 +359,7 @@ def get_stock_news_from_db(ticker: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: returns a dataframe of the stock_news table
     """
-    return pd.read_sql_query(
-        f"SELECT * FROM public.stock_news WHERE ticker='{ticker}'", DB_URL
-    )
+    return pd.read_sql_query(f"SELECT * FROM public.stock_news ", DB_URL)
 
 
 def get_stock_news_with_finbert_scores_from_db(ticker: str) -> pd.DataFrame:
@@ -349,11 +400,31 @@ def get_stock_news_with_finbert_tone_scores_from_db(ticker: str) -> pd.DataFrame
     )
 
 
-def get_stock_news_with_finbert_whole_article_scores_from_db(
+def get_stock_news_with_finbert_tone_whole_article_scores_from_db(
     ticker: str,
 ) -> pd.DataFrame:
     """
     returns a dataframe of the stock_news table with finbert-tone scores on article summaries
+
+    Parameters:
+        None
+    Returns:
+        pd.DataFrame: returns a dataframe of the stock_news table
+    """
+    return pd.read_sql_query(
+        f"""SELECT sn.*, ftwass.positive, ftwass.negative, ftwass.neutral
+            FROM public.stock_news sn            
+            JOIN public.finbert_tone_whole_article_sentiment_scores ftwass ON sn.id = ftwass.fk_stock_news_id
+            WHERE ticker='{ticker}'""",
+        DB_URL,
+    )
+
+
+def get_stock_news_with_finbert_whole_article_scores_from_db(
+    ticker: str,
+) -> pd.DataFrame:
+    """
+    returns a dataframe of the stock_news table with finbert scores on whole articles
 
     Parameters:
         None

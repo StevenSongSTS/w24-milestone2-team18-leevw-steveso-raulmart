@@ -24,19 +24,8 @@ def grid_cv_test_model(
     X = data_frame[features_to_use]
     y = data_frame[feature_to_predict]
 
-    # view_splits = list(
-    #     TimeSeriesSplit(
-    #         n_splits=10,
-    #         max_train_size=cv_train_size,
-    #         test_size=cv_test_size,
-    #         gap=lag_time,
-    #     ).split(X)
-    # )
-    # for split in view_splits:
-    #     print((split[0][0], split[0][-1]), (split[1][0], split[1][-1]))
-
     tss_splits = TimeSeriesSplit(
-        n_splits=10,
+        n_splits=5,
         max_train_size=cv_train_size,
         test_size=cv_test_size,
         gap=lag_time,

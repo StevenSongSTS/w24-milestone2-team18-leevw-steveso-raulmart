@@ -1,5 +1,6 @@
 import pandas as pd
 import yfinance
+import numpy as np
 from constants import DATA_END_DATE, DATA_START_DATE
 
 
@@ -15,6 +16,7 @@ def gen_df_for_supervised_learning(ticker: str, sentiment_df_retrieval_function)
         .history(start=DATA_START_DATE, end=DATA_END_DATE)
         .reset_index()
     )
+
     stock_price_history.columns = [
         "_".join(x.lower().split(" ")) for x in stock_price_history.columns
     ]
@@ -48,5 +50,6 @@ def gen_df_for_supervised_learning(ticker: str, sentiment_df_retrieval_function)
         ["high", "low", "close", "volume"]
     ].shift(1)
     combo_df = combo_df.iloc[1:]
+    combo_df["closed_higher"] = np.where(combo_df.close > combo_df.open, 1, 0)
 
     return combo_df

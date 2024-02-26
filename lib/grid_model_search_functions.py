@@ -14,6 +14,7 @@ def grid_cv_test_model(
     cv_train_size,
     cv_test_size,
     lag_time,
+    num_tss_splits,
 ):
 
     steps = [("scaler", MinMaxScaler((-1, 1))), ("model", model)]
@@ -25,7 +26,7 @@ def grid_cv_test_model(
     y = data_frame[feature_to_predict]
 
     tss_splits = TimeSeriesSplit(
-        n_splits=5,
+        n_splits=num_tss_splits,
         max_train_size=cv_train_size,
         test_size=cv_test_size,
         gap=lag_time,
@@ -44,7 +45,11 @@ def grid_cv_test_model(
 
 
 def iterative_grid_cv_model_testing(
-    model, model_parameters, data_settings_grid_list, features_to_use
+    model,
+    model_parameters,
+    data_settings_grid_list,
+    features_to_use,
+    tss_splits,
 ):
     results_df = pd.DataFrame()
     for data_settings in data_settings_grid_list:
@@ -61,6 +66,7 @@ def iterative_grid_cv_model_testing(
                 lag_time=data_settings["lag_time"],
                 feature_to_predict=data_settings["feature_to_predict"],
                 scoring_method=data_settings["scoring_method"],
+                num_tss_splits=tss_splits,
             )
 
             res_df = pd.DataFrame(res)

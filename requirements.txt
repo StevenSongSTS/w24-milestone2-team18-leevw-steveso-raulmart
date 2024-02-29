@@ -43,7 +43,6 @@ executing==2.0.1
 fastjsonschema==2.19.1
 filelock==3.13.1
 finbert-embedding==0.1.5
-finvader==1.0.4
 flair==0.13.1
 flatbuffers==23.5.26
 fonttools==4.47.2
@@ -224,3 +223,4 @@ widgetsnbextension==4.0.10
 Wikipedia-API==0.6.0
 wrapt==1.14.1
 yfinance==0.2.36
+finvader==1.0.2

@@ -15,6 +15,7 @@ def grid_cv_test_model(
     cv_test_size,
     lag_time,
     num_tss_splits,
+    return_model=False,
 ):
 
     steps = [("scaler", MinMaxScaler((-1, 1))), ("model", model)]
@@ -41,7 +42,7 @@ def grid_cv_test_model(
     )
 
     grid_search_cv_model.fit(X, y)
-    return grid_search_cv_model.cv_results_
+    return grid_search_cv_model if return_model else grid_search_cv_model.cv_results_
 
 
 def iterative_grid_cv_model_testing(
